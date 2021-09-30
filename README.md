@@ -15,12 +15,6 @@ skills, upgrades, and items to push your high score higher and higher.
 
 This game is an entry for the [Game Boy Competition 2021](https://itch.io/jam/gbcompo21).
 
-## Cloning
-
-If cloning this repo from scratch, make sure to pass the `--recursive` flag to `git clone`; if you have already cloned it, you can use `git submodule update --init` within the cloned repo.
-
-If the project fails to build, and either `src/include/hardware.inc/` or `src/include/rgbds-structs/` are empty, try running `git submodule update --init`.
-
 # Controls
 
 ## Loadout Controls
