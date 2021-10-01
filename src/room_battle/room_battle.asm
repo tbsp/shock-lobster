@@ -3405,6 +3405,12 @@ GameOver:
     rst     MemsetSmall
 .noPearlOverflow
 
+    ; Save new hiscore and pearl counts to SRAM
+    ; Note: Done here because I find there's a natural tendency to power
+    ;  off the game at this stage and not return to the status screen, where
+    ;  the save was previously updated.
+    call    UpdateSavedGame
+
     ld      a, WAIT_GAME_OVER
     ldh     [hMessageBoxActive], a
     ret
@@ -3519,11 +3525,6 @@ InputProcessing:
     ldh     [hVBlankUpdateAudio], a
 
     call    FadeOut
-
-    ; Save new hiscore and pearl counts to SRAM
-    ; Note: Done here because it can cause a slight pause which we can
-    ;  hide behind the transition.
-    call    UpdateSavedGame
 
     ld      a, MODE_BATTLE
     ldh     [hLastMode], a
