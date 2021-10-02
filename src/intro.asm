@@ -76,6 +76,7 @@ hEnabledOAMY::      ds 1 ; Y coordinate of sprites
 hEnabledOAMBaseX::  ds 1 ; Base X coordinate of enabled skill/upgrade sprites
 hEnabledOAMDeltaX:: ds 1 ; Delta X for each sprite added
 hEnabledOAMLowByte::ds 1 ; Low byte of OAM to start inserting new entries
+hDASDelay::         ds 1 ; Delay before cursur movement is auto-repeated when held
 
 NEXTU ; Title
 hFrameCounter::     ds 1 ; Frame counter to regulate raster animation speed

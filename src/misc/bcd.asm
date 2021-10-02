@@ -18,6 +18,10 @@
 ;    misrepresented as being the original software.
 ; 3. This notice may not be removed or altered from any source distribution.
 ;
+
+; Alterations made by Dave VanEe:
+; - Commented out unused pctdigit code to reduce ROM use
+
 section "bcd",ROM0
 
 ;;
@@ -48,48 +52,48 @@ bcd8bit_baa::
   rl b
   ret
 
-section "pctdigit",ROM0
-;;
-; Calculates one digit of converting a fraction to a percentage.
-; @param B numerator, less than C
-; @param C denominator, greater than 0
-; @return A = floor(10 * B / C); B = 10 * B % C;
-; CHL unchanged; D clobbered; E = 0
-pctdigit::
-  ld de,$1000
+; section "pctdigit",ROM0
+; ;;
+; ; Calculates one digit of converting a fraction to a percentage.
+; ; @param B numerator, less than C
+; ; @param C denominator, greater than 0
+; ; @return A = floor(10 * B / C); B = 10 * B % C;
+; ; CHL unchanged; D clobbered; E = 0
+; pctdigit::
+;   ld de,$1000
 
-  ; bit 3: A.E = B * 1.25
-  ld a,b
-  srl a
-  rr e
-  srl a
-  rr e
-  add b
-  jr .have_first_carry
+;   ; bit 3: A.E = B * 1.25
+;   ld a,b
+;   srl a
+;   rr e
+;   srl a
+;   rr e
+;   add b
+;   jr .have_first_carry
 
-  ; bits 2-0: mul A.E by 2
-  .bitloop:
-    rl e
-    adc a
-  .have_first_carry:
-    jr c,.yessub
-    cp c
-    jr c,.nosub
-    .yessub:
-      ; Usually A>=C so subtracting C won't borrow.  But if we
-      ; arrived via yessub, A>256 so even though 256+A>=C, A<C.
-      sub c
-      or a
-    .nosub:
-    rl d
-    jr nc,.bitloop
+;   ; bits 2-0: mul A.E by 2
+;   .bitloop:
+;     rl e
+;     adc a
+;   .have_first_carry:
+;     jr c,.yessub
+;     cp c
+;     jr c,.nosub
+;     .yessub:
+;       ; Usually A>=C so subtracting C won't borrow.  But if we
+;       ; arrived via yessub, A>256 so even though 256+A>=C, A<C.
+;       sub c
+;       or a
+;     .nosub:
+;     rl d
+;     jr nc,.bitloop
 
-  ld b,a
-  ; Binary to decimal subtracts if trial subtraction has no borrow.
-  ; 6502/ARM carry: 0: borrow; 1: no borrow
-  ; 8080 carry: 1: borrow; 0: borrow
-  ; The 6502 interpretation is more convenient for binary to decimal
-  ; conversion, so convert to 6502 discipline
-  ld a,$0F
-  xor d
-  ret
+;   ld b,a
+;   ; Binary to decimal subtracts if trial subtraction has no borrow.
+;   ; 6502/ARM carry: 0: borrow; 1: no borrow
+;   ; 8080 carry: 1: borrow; 0: borrow
+;   ; The 6502 interpretation is more convenient for binary to decimal
+;   ; conversion, so convert to 6502 discipline
+;   ld a,$0F
+;   xor d
+;   ret

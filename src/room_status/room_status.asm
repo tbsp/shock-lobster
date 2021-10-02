@@ -26,6 +26,9 @@ INCLUDE "charmap.asm"
 INCLUDE "hiscore.inc"
 INCLUDE "sound_fx.inc"
 
+DEF DAS_START EQU 12    ; frames before DAS starts
+DEF DAS_REPEAT EQU 6    ; frames between DAS repeats
+
 DEF STATUS_HEIGHT_TILES EQU 14
 DEF STATUS_WIDTH_TILES  EQU 8
 
@@ -1003,11 +1006,11 @@ InputProcessing:
 
     ldh     a, [hPressedKeys]
     and     PADF_UP
-    jr      nz, .upPressed
+    jp      nz, .upPressed
 
     ldh     a, [hPressedKeys]
     and     PADF_DOWN
-    jr      nz, .downPressed
+    jp      nz, .downPressed
 
     ldh     a, [hPressedKeys]
     and     PADF_START
@@ -1015,13 +1018,14 @@ InputProcessing:
 
     ldh     a, [hPressedKeys]
     and     PADF_SELECT
-    jr      nz, .selectPressed
+    jp      nz, .selectPressed
 
     ldh     a, [hPressedKeys]
     and     PADF_A
     jp      nz, .aPressed
 
     inc     l  ; advance to wSelectedIndex for following handlers
+    ld      b, DAS_START    ; setup DAS delay for activation
     ldh     a, [hPressedKeys]
     and     PADF_LEFT
     jr      nz, .leftPressed
@@ -1029,6 +1033,16 @@ InputProcessing:
     ldh     a, [hPressedKeys]
     and     PADF_RIGHT
     jr      nz, .rightPressed
+
+    ld      c, $FF  ; prepare left offset
+    ldh     a, [hHeldKeys]
+    and     PADF_LEFT
+    jr      nz, .leftRightHeld
+
+    ld      c, $01  ; prepare right offset
+    ldh     a, [hHeldKeys]
+    and     PADF_RIGHT
+    jr      nz, .leftRightHeld
 
     ldh     a, [hPressedKeys]
     and     PADF_B
@@ -1064,12 +1078,22 @@ InputProcessing:
     pop     af          ; pop off InputProcessing return address
     ret
 
+.leftRightHeld
+    ldh     a, [hDASDelay]
+    dec     a
+    ldh     [hDASDelay], a
+    ret     nz
+    ld      a, c
+    ld      b, DAS_REPEAT   ; switch to DAS delay for repeats
+    jr      .processLeftRight
+
 .leftPressed
     ld      a, $FF
 .rightPressed
     swap    a           ; right: PADF_RIGHT is $10, swap to $01 offset
                         ; left: swap $FF to $FF offset
                         ; (this would be more clever if swap wasn't 2 bytes)
+.processLeftRight
     ld      c, [hl]     ; get wSelectedIndex
     add     c           ; add offset to current index
     and     7           ; will drop $FF down to $07, wrapping to the max
@@ -1081,8 +1105,12 @@ InputProcessing:
     ret     z           ; return if we're at the top depth
     ld      [hl], c     ; store new wSelectedIndex
 
+    ld      a, b        ; reset DAS delay
+    ldh     [hDASDelay], a
+
     ld      a, FX_CURSOR_MOVE
     call    audio_play_fx
+
     jr      .updateCursorFull
 
 .upPressed

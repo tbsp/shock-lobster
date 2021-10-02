@@ -75,6 +75,7 @@ CreditsText:
     db "\"Darkstone Remix\" by Tronimal<NEWLINE><NEWLINE>"
     db "Monster graphics by LuckyCassette<END>"
 
+SECTION "Credits Data 2", ROM0
 ; Written by itself since we can out of tile space in the $8800 block
 CreditsText2:
     db "MinimalPixel font by Mounir Tohami<END>"
