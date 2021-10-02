@@ -26,8 +26,8 @@ INCLUDE "charmap.asm"
 INCLUDE "hiscore.inc"
 INCLUDE "sound_fx.inc"
 
-DEF DAS_START EQU 12    ; frames before DAS starts
-DEF DAS_REPEAT EQU 6    ; frames between DAS repeats
+DEF DAS_START EQU 24    ; frames before DAS starts
+DEF DAS_REPEAT EQU 4    ; frames between DAS repeats
 
 DEF STATUS_HEIGHT_TILES EQU 14
 DEF STATUS_WIDTH_TILES  EQU 8
