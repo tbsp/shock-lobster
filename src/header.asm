@@ -168,7 +168,7 @@ Reset::
 
     ; Update horizontal split
     ld      a, b
-    cp      SplitAnimationPath.end - SplitAnimationPath + END_LINE
+    cp      SplitAnimationPath.end - SplitAnimationPath + END_LINE - 1
     jr      nc, .noSplitMovement
     ldh     a, [hSplitLowByte]
     inc     a
