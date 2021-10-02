@@ -145,8 +145,8 @@ Come out swinging with three 100 damage blasts. Each hit may be a critical hit.
 [Consumable]
 
 Final Word:
-Unleash an impassioned last-ditch retort, dealing three 100 damage blasts. Each hit may be a critical
-hit. [Consumable]
+Unleash an impassioned last-ditch retort, dealing three 100 damage blasts. Each
+hit may be a critical hit. [Consumable]
 
 Second Wind:
 Bounce back from defeat for a second chance. [Consumable]
@@ -188,8 +188,12 @@ Additional Code/Assets:
 - Sound Effect Driver and BCD functions by PinoBatch
     (https://github.com/pinobatch/libbet/blob/master/src/audio.z80)
     (https://github.com/pinobatch/libbet/blob/master/src/bcd.z80)
-- Lucky Bestiary by LuckyCassette (https://luckycassette.itch.io/lucky-bestiary-gb)
-- MinimalPixel Font by Mounir Tohami (https://mounirtohami.itch.io/minimalpixel-font)
+- HiScore Library by H. Mulder
+    (https://github.com/tbsp/shock-lobster/blob/master/src/hiscore.asm)
+- Lucky Bestiary by LuckyCassette
+    (https://luckycassette.itch.io/lucky-bestiary-gb)
+- MinimalPixel Font by Mounir Tohami
+    (https://mounirtohami.itch.io/minimalpixel-font)
 - Electrox Font by Dennis Ludlow (https://www.1001fonts.com/electrox-font.html)
 
 Music From GB Studio Community Assets
@@ -198,3 +202,15 @@ Music From GB Studio Community Assets
 - "FridgeMusic" by Tomas Danko (https://creativecommons.org/licenses/by/4.0/)
     Patterns were reordered to improve overall effect on hardware in game context
 - "Darkstone Remix" (cropped) by Tronimal
+
+Changelog:
+----------
+
+2021-10-01 (ROM Version: 1):
+- Save new highscore/pearls when game is over, instead of when returning to the
+  status screen, as it feels natural to power off at game over and you'd lose
+  your progress before
+- Change corners of SELECT tiles from color 2 to color 1 (lighter) to match
+  START tiles
+- Add DAS (delayed auto shift) to left/right cursor movement on status screen
+- Fix a single frame visual glitch at the end of the bootup logo effect

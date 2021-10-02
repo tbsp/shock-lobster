@@ -191,6 +191,7 @@ activate. **WARNING** No final confirmation!
 - [gb-vwf](https://github.com/ISSOtm/gb-vwf) by ISSOtm 
 - [hUGEDriver](https://github.com/SuperDisk/hUGEDriver) by Superdisk 
 - [Sound Effect Driver](https://github.com/pinobatch/libbet/blob/master/src/audio.z80) and [BCD functions](https://github.com/pinobatch/libbet/blob/master/src/bcd.z80) by PinoBatch
+- [HiScore Library](https://github.com/tbsp/shock-lobster/blob/master/src/hiscore.asm) by H. Mulder
 - [Lucky Bestiary](https://luckycassette.itch.io/lucky-bestiary-gb) by LuckyCassette 
 - [MinimalPixel Font](https://mounirtohami.itch.io/minimalpixel-font) by Mounir Tohami 
 - [Electrox Font](https://www.1001fonts.com/electrox-font.html) by Dennis Ludlow
@@ -200,3 +201,12 @@ Music From [GB Studio Community Assets](https://github.com/DeerTears/GB-Studio-C
 - "FridgeMusic" by Tomas Danko [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)
     Patterns were reordered to improve overall effect on hardware in game context
 - "Darkstone Remix" (cropped) by Tronimal
+
+# Change Log
+
+### 2021-10-01 (ROM version: 1)
+
+- Save new highscore/pearls when game is over, instead of when returning to the status screen, as it feels natural to power off at game over and you'd lose your progress before
+- Change corners of SELECT tiles from color 2 to color 1 (lighter) to match START tiles
+- Add DAS (delayed auto shift) to left/right cursor movement on status screen
+- Fix a single frame visual glitch at the end of the bootup logo effect
