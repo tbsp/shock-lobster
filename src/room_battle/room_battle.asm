@@ -2959,11 +2959,9 @@ ENDC
     ld      a, c
     ld      [wPendingPearls], a
     or      a
-    jr      z, .noPearlsCollected
+    ret     z       ; no pearls collected
     ld      a, FX_PEARL
     call    audio_play_fx
-.noPearlsCollected
-
     ret
 
 
@@ -3115,7 +3113,6 @@ UpdateScore:
     ld      a, [hli]
     ld      c, a
     ld      a, [hl]
-    ld      b, a
 
     ld      b, a
     or      c
@@ -3135,9 +3132,7 @@ UpdateScore:
     ld      e, l
     ld      hl, SCORE_TILEMAP
     ld      c, HISCORE_LENGTH - 2
-    call    PrintScore
-
-    ret
+    jp      PrintScore
 
 .noDamageUpdate
     ld      a, [wPendingPearls]
@@ -3424,8 +3419,7 @@ ShowFinalItems:
     ld      hl, wFinalWordCount
     lb      bc, 4, LOW(vItemTiles.SecondWind / 16)
     ld      d, WAIT_FINAL_ITEMS
-    call    SetupItemPanel
-    ret
+    jp      SetupItemPanel
 
 InputProcessing:
     ldh     a, [hMessageBoxActive]
@@ -3473,8 +3467,7 @@ InputProcessing:
     ; Show the 'A' tile so the player knows they can now use A to advance
     ld      hl, vAButtonTilemap
     lb      bc, LOW(vAButtonTile / 16), 1
-    call    LCDMemsetSmallFromB ; smaller than a one-byte direct load
-    ret
+    jp      LCDMemsetSmallFromB ; smaller than a one-byte direct load
 .abCounterElapsed
     ldh     a, [hPressedKeys] ; A locks/unlocks cursor on tiles
     and     PADF_A

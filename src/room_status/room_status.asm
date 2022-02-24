@@ -502,12 +502,11 @@ GetBitmaskFromA:
     ; Get bitmask for selection (TODO: Really no smaller way?)
     ld      d, 1
     or      a
-    jr      z, .firstItem
+    ret     z   ; first item
 .shiftLoop
     sla     d
     dec     a
     jr      nz, .shiftLoop
-.firstItem
     ret
 
 ; Print damage hiscore for current game speed
@@ -521,8 +520,7 @@ PrintDamageHiscore:
     ld      e, a
     ld      hl, vDamageTilemap
     ld      c, HISCORE_LENGTH
-    call    PrintScore
-    ret
+    jp      PrintScore
 
 
 InitStatus::
@@ -1241,8 +1239,7 @@ InputProcessing:
 
 .updateNameDescription
     call    UpdateSelectionStatus
-    call    UpdateItemDescription
-    ret
+    jp      UpdateItemDescription
 
 .topCursor
     ld      de, StartCursorCoordinates
@@ -1497,8 +1494,7 @@ UpdateSelectionStatus:
     ; Top menu, clear state tilemap
     ld      hl, vStateTilemap
     lb      bc, 0, 5
-    call    LCDMemsetSmallFromB
-    ret
+    jp      LCDMemsetSmallFromB
 
 .bottomMenu
     push    hl          ; cache wSelectedIndex pointer
@@ -1536,8 +1532,7 @@ UpdateSelectionStatus:
     bit     OPTIONB_SPEED, d
     jr      z, .notSpeed
     lb      bc, 0, 4
-    call    LCDMemsetSmallFromB
-    ret
+    jp      LCDMemsetSmallFromB
 .notMiscRow
 .notSpeed
     and     c       ; check if item is enabled
@@ -1637,9 +1632,7 @@ UpdateSelectionStatus:
     ld      de, wItemCostHiScore + 4
     ld      hl, vStateTilemap
     ld      c, HISCORE_LENGTH - 4
-    call    PrintScore
-    
-    ret
+    jp      PrintScore
 
 ; Update the name and description for the selected item. Also ensure
 ;  the correct icons are visible for the section being shown, along
@@ -1736,11 +1729,9 @@ UpdateItemDescription:
     ld      a, TEXT_NEW_STR
     call    PrintVWFText
     ld      hl, vDescriptionTilemap
-    call    SetPenPosition
-
+    jp      SetPenPosition
     ; Note: Actual printing occurs in the RoomStatus mainloop
 
-    ret
 
 ; Update the displayed count of each item (plus the game speed)
 UpdateItemCounts:

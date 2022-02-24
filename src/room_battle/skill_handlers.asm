@@ -449,7 +449,7 @@ ProcessClarityProc:
 .overrideClearedProc
     ld      a, [wEnabledUpgrades]
     and     UPGRADEF_CLARITY
-    jr      z, .noClarityUpgrade
+    ret     z       ; no clarity upgrade
 
     ldh     a, [hClarityActive]
     inc     a       ; offset flag so '0' will result in the zero flag being set by `dec e`
@@ -485,7 +485,6 @@ ProcessClarityProc:
     ldh     [hClarityActive], a
 
     dec     e       ; set `z` flag based on prior state of proc
-.noClarityUpgrade
     ret
 
 ; Release a jet of water, propelling yourself upwards and doing 3 points of damage. This damage effect can only occur once every second.
@@ -877,9 +876,7 @@ Electrify:
 
     ; Force a tick to update the timer number
     inc     a   ; Put an odd value into `a` and jump mid-call to avoid dealing damage
-    call    ElectrifyTimerTick.fakeTimerValue
-
-    ret
+    jp      ElectrifyTimerTick.fakeTimerValue
 
 ; Empower [25 Energy]
 ; Finisher which increases damage done by 30%. Lasts longer per charge:

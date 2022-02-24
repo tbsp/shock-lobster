@@ -265,10 +265,8 @@ RoomTitle::
     ldh     [hLastMode], a
     ld      a, MODE_STATUS
     ld      [hGameMode], a
-    call    FadeOut
-
+    jp      FadeOut
     ; Return to the mode handler
-    ret
 
 ; Special initialization when initializating directly into title mode
 ;  (bypassing the credits, as from the status screen)
