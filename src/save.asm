@@ -22,6 +22,7 @@
 
 INCLUDE "hiscore.inc"
 INCLUDE "engine.inc"
+INCLUDE "defines.asm"
 
 DEF DEBUG_FULL_UNLOCK EQU 0
 
@@ -175,11 +176,19 @@ InitSRAM::
     dec     b
     jr      nz, .scoreFill
 
-.SaveExists
-    ; Copy the player state from SRAM to WRAM
-    ld      de, sPlayerState
-    ld      hl, wPlayerState
-    ld      c, sEnd - sPlayerState
+    ; If SELECT is held at startup, unlock and enable all skills/upgrades
+    ;  so players without SRAM (primarily) can jump right to playing that
+    ;  way if they so desire without having to unlock everything every time.
+    ldh     a, [hHeldKeys]
+    and     PADF_SELECT
+    jr      z, .noFullUnlock
+    ld      l, LOW(wPlayerState)
+    ld      a, $FF  ; full unlock/enable
+    ld      [hli], a
+    ld      [hli], a
+    ld      [hli], a
+    ld      [hli], a
+.noFullUnlock
 
     ; Next try to copy the SaveID to SRAM (this will fail if the cartridge lacks
     ;  SRAM, but even if it fails the default save is already in WRAM)

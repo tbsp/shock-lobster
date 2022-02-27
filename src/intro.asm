@@ -99,6 +99,10 @@ SECTION "Intro", ROMX
 
 Intro::
 
+    ; Wait for a single VBlank so the hHeldKeys value is updated
+    ;  to let us detect which buttons are held on startup
+    rst     WaitVBlank
+
     ; Init SRAM and/or load the current saved data
     call    InitSRAM
 
