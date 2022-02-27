@@ -144,12 +144,23 @@ InitSRAM::
     jr      nz, .LoadDefaultSave
     dec     b
     jr      nz, .loop
-    jr      .SaveExists
+
+    ; Save exists, copy the player state from SRAM to WRAM
+    ld      de, sPlayerState
+    ld      hl, wPlayerState
+    ld      c, sEnd - sPlayerState
+    rst     MemcpySmall
+
+    xor     a
+    ld      [$00], a    ; disable SRAM access
+
+    ret
     
 .LoadDefaultSave::
-    ld      de, SaveRef
-    ld      hl, sSaveID     ; copy SaveID and default save into SRAM
-    ld      c, PlayerNew.end - SaveRef
+    ; Copy default save state directly to WRAM
+    ld      de, PlayerNew
+    ld      hl, wPlayerState
+    ld      c, PlayerNew.end - PlayerNew
     rst     MemcpySmall
 
     ; Fill wSecondWindCache and initial scores/pearls
@@ -169,12 +180,16 @@ InitSRAM::
     ld      de, sPlayerState
     ld      hl, wPlayerState
     ld      c, sEnd - sPlayerState
+
+    ; Next try to copy the SaveID to SRAM (this will fail if the cartridge lacks
+    ;  SRAM, but even if it fails the default save is already in WRAM)
+    ld      de, SaveRef
+    ld      hl, sSaveID
+    ld      c, PlayerNew - SaveRef
     rst     MemcpySmall
 
-    xor     a
-    ld      [$00], a    ; disable SRAM access
-  
-    ret
+    ; Fall through to copy the default state from WRAM to SRAM, and then return
+    ; Note: This will include a redundant SRAM enable, but that's fine
 
 ; Copy the current player state to SRAM
 UpdateSavedGame::
@@ -212,9 +227,11 @@ PlayerNew:
 
 ELSE
 
+DEF SAVE_REF_TERMINATOR EQU $F4
+
 ; 4 bytes used to identify that valid saved data is present in SRAM
 SaveRef:
-    db $A4, $2E, $19, $F4
+    db $A4, $2E, $19, SAVE_REF_TERMINATOR
 PlayerNew:
     db SKILLF_ZAP | SKILLF_JET | SKILLF_SHOCK | SKILLF_DISCHARGE ; Unlocked skills
     db SKILLF_ZAP | SKILLF_JET | SKILLF_SHOCK | SKILLF_DISCHARGE ; Enabled skills
