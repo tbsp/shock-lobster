@@ -7,7 +7,7 @@ PADVALUE := 0xFF
 ## Header constants (passed to RGBFIX)
 
 # ROM version (typically starting at 0 and incremented for each published version)
-VERSION := 1
+VERSION := 2
 
 # 4-ASCII letter game ID
 GAMEID := SHLB
