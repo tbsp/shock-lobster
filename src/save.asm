@@ -236,11 +236,9 @@ PlayerNew:
 
 ELSE
 
-DEF SAVE_REF_TERMINATOR EQU $F4
-
 ; 4 bytes used to identify that valid saved data is present in SRAM
 SaveRef:
-    db $A4, $2E, $19, SAVE_REF_TERMINATOR
+    db $A4, $2E, $19, $F4
 PlayerNew:
     db SKILLF_ZAP | SKILLF_JET | SKILLF_SHOCK | SKILLF_DISCHARGE ; Unlocked skills
     db SKILLF_ZAP | SKILLF_JET | SKILLF_SHOCK | SKILLF_DISCHARGE ; Enabled skills
