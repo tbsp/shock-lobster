@@ -403,15 +403,7 @@ PrintVWFChar::
 	; xor a
 	ld [wFlushedTiles], a
 
-	ldh a, [hCurROMBank]
-	push af
-	ld a, BANK(_PrintVWFChar)
-	ldh [hCurROMBank], a
-	ld [rROMB0], a
 	call _PrintVWFChar
-	pop af
-	ldh [hCurROMBank], a
-	ld [rROMB0], a
 	ret
 
 .delay
@@ -512,9 +504,7 @@ RefillCharBuffer:
 	; Get ready to read chars into the buffer
 	ld hl, wTextSrcBank
 RestartCharBufRefill:
-	ld a, [hld]
-	;ldh [hCurROMBank], a
-	;ld [rROMB0], a
+	dec hl ; skip unused bank number
 	;assert wTextSrcBank - 1 == wTextSrcPtr + 1
 	ld a, [hld]
 	ld l, [hl]
@@ -650,9 +640,6 @@ _RefillCharBuffer:
 	ld a, e
 	ld [wTextFillPtrEnd], a
 
-	;ld a, BANK(_PrintVWFChar)
-	;ldh [hCurROMBank], a
-	;ld [rROMB0], a
 	; Restart printer's reading
 	ld hl, wTextCharBuffer
 	ret
@@ -799,14 +786,10 @@ StartNewLine:
 
 ; Sets text ptr to given location
 ReaderJumpTo:
-	ld a, [hli]
-	ld b, a
+	inc hl ; skip unused bank number
 	ld a, [hli]
 	ld h, [hl]
 	ld l, a
-	ld a, b
-	ldh [hCurROMBank], a
-	ld [rROMB0], a
 	ret
 
 ; Start printing a new string, then keep writing this one
@@ -831,9 +814,6 @@ ReaderCall:
 	adc a, HIGH(wTextStack - 1)
 	sub c
 	ld b, a
-	; Save ROM bank immediately, as we're gonna bankswitch
-	ldh a, [hCurROMBank]
-	ld [bc], a
 	dec bc
 
 	; Swap src ptrs
@@ -852,10 +832,6 @@ ReaderCall:
 	ld a, [hld]
 	ld l, [hl]
 	ld h, a
-	; Perform bankswitch now that all bytecode has been read
-	ld a, [de]
-	ldh [hCurROMBank], a
-	ld [rROMB0], a
 	ret
 
 ; Start printing a new string from a dictionary, then keep writing this one
@@ -880,12 +856,7 @@ ReaderDict:
 	adc a, HIGH(wTextStack - 1)
 	sub c
 	ld b, a
-	; Save ROM bank immediately, as we're gonna bankswitch
-	; -> We're not actually gonna bankswitch, but we need to store
-	;    the current bank because that's how the stack works.
-	ldh a, [hCurROMBank]
-	ld [bc], a
-	dec bc
+	dec bc ; increment past unused bank entry
 
 	; Swap src ptrs
 	;ld a, [hli]
