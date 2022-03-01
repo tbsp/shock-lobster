@@ -58,6 +58,9 @@ The game speed and loadout/items used will be summarized on the game over panel,
 allowing you to compete with your friends to get the highest score using a specific
 combination of skills and upgrades!
 
+Note: If the game is running from a flash cart without SRAM, skills/upgrades/scores
+will not be saved between sessions. To help with this, you can hold SELECT as you
+start up the game to unlock all skills/upgrades.
 
 ## Skills
 
