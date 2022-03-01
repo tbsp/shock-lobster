@@ -86,30 +86,6 @@ Reset::
     ld      a, WY_START
     ldh     [rWY], a
 
-    ; Initialize variables
-    xor     a
-    ldh     [hSCYCache], a
-    ldh     [hFrameCounterLogo], a
-    ld      a, SPLIT_LINE+1
-    ldh     [hResumeLY], a
-    ld      a, LOW(SplitAnimationPath)
-    ldh     [hSplitLowByte], a
-
-    ; Enable window/objects safely
-:   ldh     a, [rSTAT]
-    and     STATF_BUSY
-    jr      nz, :-
-    ld      a, LCDC_SHOWN
-    ldh     [rLCDC], a
-
-    ; Clear right half of first tilemap logo
-    ld      hl, _SCRN0 + LEFT_TILEMAP_OFFSET
-    lb      bc, 0, 6
-    call    LCDMemsetSmallFromB
-    ld      l, LOW(_SCRN0 + LEFT_TILEMAP_OFFSET + $20)
-    ld      c, 6
-    call    LCDMemsetSmallFromB
-
     ; Position sprite to overlap (R)
     ld      de, SpriteAnimationPath
     ld      hl, wShadowOAM
@@ -127,9 +103,38 @@ Reset::
     ld      c, OAM_COUNT * sizeof_OAM_ATTRS - 3
     rst     MemsetSmall
 
+    ; Take advantate of trailing A==0 to initialize a few vars
+    ldh     [hSCYCache], a
+    ldh     [hFrameCounterLogo], a
+
     ; Set object palette for effect
     dec     a   ; $FF
     ldh     [rOBP0], a
+
+    ; Initialize aditional variables
+    ld      a, SPLIT_LINE+1
+    ldh     [hResumeLY], a
+    ld      a, LOW(SplitAnimationPath)
+    ldh     [hSplitLowByte], a
+
+    ; Ensure OAM is initialized before sprites are enabled
+    ld      a, HIGH(wShadowOAM)
+    call    hOAMDMA
+
+    ; Enable window/objects safely
+:   ldh     a, [rSTAT]
+    and     STATF_BUSY
+    jr      nz, :-
+    ld      a, LCDC_SHOWN
+    ldh     [rLCDC], a
+
+    ; Clear right half of first tilemap logo
+    ld      hl, _SCRN0 + LEFT_TILEMAP_OFFSET
+    lb      bc, 0, 6
+    call    LCDMemsetSmallFromB
+    ld      l, LOW(_SCRN0 + LEFT_TILEMAP_OFFSET + $20)
+    ld      c, 6
+    call    LCDMemsetSmallFromB
 
     ; Animate!
     ld      b, SPLIT_LINE
