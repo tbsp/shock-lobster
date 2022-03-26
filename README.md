@@ -207,3 +207,12 @@ Music From [GB Studio Community Assets](https://github.com/DeerTears/GB-Studio-C
 - Change corners of SELECT tiles from color 2 to color 1 (lighter) to match START tiles
 - Add DAS (delayed auto shift) to left/right cursor movement on status screen
 - Fix a single frame visual glitch at the end of the bootup logo effect
+
+### 2022-03-01 (ROM Version: 2)
+- Rework how the default player state is initialized to allow the game to run on flash carts without SRAM
+- Add the option to hold SELECT when first initializing the player state to unlock all skills/upgrades, as a shortcut for players without SRAM
+- Remove redundant bank switching writes which cause problem when run from a flash cart which mimics MBC5 (EMS or cheap repros)
+- Ensure OAM is fully initialized before enabling objects for the boot logo effect
+
+### 2022-03-25 (ROM Version: 3)
+- Fixed horrible bug with electrify introduced along with tail call optimizations in ROM version 2.
