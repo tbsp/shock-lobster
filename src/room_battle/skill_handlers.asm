@@ -876,7 +876,8 @@ Electrify:
 
     ; Force a tick to update the timer number
     inc     a   ; Put an odd value into `a` and jump mid-call to avoid dealing damage
-    jp      ElectrifyTimerTick.fakeTimerValue
+    call    ElectrifyTimerTick.fakeTimerValue
+    ret
 
 ; Empower [25 Energy]
 ; Finisher which increases damage done by 30%. Lasts longer per charge:
